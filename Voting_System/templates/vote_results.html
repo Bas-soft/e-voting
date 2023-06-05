@@ -1,0 +1,279 @@
+{% extends 'base.html'  %}
+
+{% block content %}
+    {% load static %}
+
+    <div class="aside_container">
+        <aside class="sticky">
+            <button id="close-btn">
+                <span class="material-symbols-sharp">
+                close
+                </span>
+            </button>
+            <div class="sidebar">
+                <a href="{% url 'admin' %}"  >
+                    <span class="icon-image material-symbols-outlined">dashboard</span>
+
+                    <h4><strong>Dashboard</strong> </h4>
+                </a>
+                <a href="{% url 'voters' %}">
+                    <span class="icon-image material-symbols-outlined">person</span>
+                    <h4> <strong>Voters</strong></h4>
+                </a>
+                <a href="{% url 'results'  %}" class="active" >
+                    <span class="icon-image material-symbols-outlined">how_to_vote</span>
+
+                    <h4><strong>Vote Results</strong> </h4>
+                </a>
+                <a href="{% url 'logout' %}" >
+                    <span class="icon-image material-symbols-outlined">logout</span>
+                    <h4><strong>Logout</strong> </h4>
+                </a>
+                <!--<a href="">
+                    <span class="material-symbols-outlined">outpatient_med</span>
+                    <h4><strong>Clinics</strong></h4>
+                </a>
+                <a href="">
+                    <span class="material-symbols-outlined">groups_3</span>
+                    <h4> <strong>Meetings</strong></h4>
+                </a>
+                <a href="#">
+                    <span class="icon-image material-symbols-outlined">person</span>
+                    <h4> <strong>Departments</strong></h4>
+                </a>
+                <a href="#">
+                    <span class="icon-image material-symbols-outlined">person</span>
+                    <h4><strong>Settings</strong> </h4>
+                </a>
+            -->
+            </div>
+
+        </aside>
+
+        <!-- ======================= Cards ================== -->
+        <div class="main">
+            <div id="myModal_details2" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>
+                        <strong>{{elections}}</strong><br><br>
+                        <strong>Start at:</strong>{{elections_start}}<br>
+                        <strong>Ends at:</strong>{{elections_ends}}
+                    </p><br>
+
+                    <div class="add_candidate">
+
+                        <form method="POST" class="form-control" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{candidate_form.as_p}}
+                            <button  class="btn btn-primary">Add Candidate</button>
+                        </form>
+                    </div>
+                    <!--<form method="post">
+                        {% csrf_token %}
+                        {{ event_form.as_p }}
+                        <button type="submit">Add Event</button>
+                    </form>-->
+
+
+                </div>
+            </div>
+            <div id="myModal_details3" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div class="row_container">
+                        <div class="info_div">
+                            <p>
+                            <strong>{{elections}}</strong><br><br>
+                            <strong>Start at:</strong>{{elections_start}}<br>
+                            <strong>Ends at:</strong>{{elections_ends}}
+                        </p>
+                        </div>
+                        <div class="btn_div">
+                            {%for portfolio  in portfolios %}
+                            <a href="{% url 'portfolio' portfolio.id %}"><button class="btn btn-primary shadow">
+                                    {{portfolio.name_of_portfolio}}
+                                </button></a>
+                            {% endfor %}
+                        </div>
+
+
+                    </div>
+
+                    <!--<div class="add_candidate">
+                        <table class="style-table">
+                            <thead class="sticky-header">
+                                <tr>
+                                    <td>Portfolio</td>
+                                    <td>Name of Candidates</td>
+                                    <td>Actions</td>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+
+                                {% for candidate in candidate_data %}
+                                    <tr class="each-row">
+
+                                      <td>{{candidate.position}}</td>
+
+                                      <td>{{candidate.name}}</td>
+
+
+
+                                        <td>
+                                            <div class="action_btn">
+                                                <a href=""><span class="material-symbols-outlined edit">note_add</span></a>
+                                                <span class="material-symbols-outlined view_details_2">preview</span>
+                                                <span class="material-symbols-outlined del">delete</span>
+                                            </div>
+                                          </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>-->
+                    <!--<form method="post">
+                        {% csrf_token %}
+                        {{ event_form.as_p }}
+                        <button type="submit">Add Event</button>
+                    </form>-->
+
+
+                </div>
+            </div>
+
+            <div class="cardBox">
+                <div class="card" id="open_details">
+
+                    <div>
+                        <div class="numbers"><h4>{{elections}}</h4></div>
+                        <div class="cardName">Elections</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <span name="eye-outline" class="icon-image_top material-symbols-outlined">person</span>
+
+                    </div>
+                </div>
+
+                <div class="card" id="Candidate_No">
+                    <div>
+                        <div class="numbers">{{portfolios_number}}</div>
+                        <div class="cardName">Number of Portfolios</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <span class="icon-image_top material-symbols-outlined">settings_accessibility</span>
+                    </div>
+                </div>
+
+                <div class="card " id="open_event" >
+
+                    <div>
+                        <div class="numbers">{{valid_voters}}</div>
+                        <div class="cardName">Number of Valid Voters</div>
+                    </div>
+                    <div class="iconBx">
+                        <span class="icon-image_top2 material-symbols-outlined">health_and_safety</span>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="card" id="show_events">
+                    <div>
+                        <div class="numbers">{{ upcoming_events }}</div>
+                        <div class="cardName">Number of Votes</div>
+                    </div>
+                    <div class="iconBx">
+                        <span class="icon-image_top2 material-symbols-outlined calendar_month">calendar_month</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details2">
+                {% for portfolio in portfolios %}
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2 class="station">{{portfolio}}</h2>
+                        <div class="search_container station">
+                            <form method="GET" action="">
+                              <input type="text" name="search2" id="search2" class="input_cust" placeholder="Search Candidate">
+                                <button class="material-symbols-outlined search_icon">search</button>
+                            </form>
+
+                          </div>
+
+                    </div>
+
+
+                    <div class="portfolio_results">
+                        <div class="candidates_div">
+                            <table>
+                                <thead class="sticky-header">
+                                    <tr>
+                                        <td>Profile</td>
+                                        <td>Candidate Name</td>
+                                        <td>Candidate's Number</td>
+                                        <td>Portfolio</td>
+                                        <td>Number of Votes</td>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for candidate in portfolio.candidate_set.all|dictsortreversed:"vote" %}
+                                        <tr class="each-row">
+                                            <td>
+                                                <img src="{{ candidate.image.url }}" class="table_img" alt="">
+                                            </td>
+                                            <td>{{ candidate.name }}</td>
+                                            <td>{{ candidate.Candidate_Number }}</td>
+                                            <td>{{ candidate.position }}</td>
+                                            <td>{{ candidate.vote }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <div class="card" id="results">
+                                <div>
+                                    <div class="numbers">Winner</div>
+                                    {% if portfolio.candidate_set.exists %}
+                                        {% with highest_voted_candidate=portfolio.candidate_set.all|dictsortreversed:"vote"|first %}
+                                            <div class="cardName">{{ highest_voted_candidate.name }}</div>
+                                            <h5 class="votes_num">Votes: {{ highest_voted_candidate.vote }}</h5>
+                                        {% endwith %}
+                                    {% else %}
+                                        <div class="cardName">No Candidate in This Portfolio</div>
+                                    {% endif %}
+                                </div>
+                                <div class="iconBx">
+                                    <span class="icon-image_top material-symbols-outlined">settings_accessibility</span>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+
+{% endblock %}

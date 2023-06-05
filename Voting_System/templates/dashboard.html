@@ -1,0 +1,320 @@
+{% extends 'base.html'  %}
+
+{% block content %}
+    {% load static %}
+
+    <div class="aside_container">
+        <aside class="sticky">
+            <button id="close-btn">
+                <span class="material-symbols-sharp">
+                close
+                </span>
+            </button>
+            <div class="sidebar">
+                <a href="{% url 'admin' %}"  class="active">
+                    <span class="icon-image material-symbols-outlined">dashboard</span>
+
+                    <h4><strong>Dashboard</strong> </h4>
+                </a>
+                <a href="{% url 'voters' %}" class="">
+                    <span class="icon-image material-symbols-outlined">person</span>
+                    <h4> <strong>Voters</strong></h4>
+                </a>
+                <a href="{% url 'results'  %}" >
+                    <span class="icon-image material-symbols-outlined">how_to_vote</span>
+
+                    <h4><strong>Vote Results</strong> </h4>
+                </a>
+                <a href="{% url 'logout' %}" >
+                    <span class="icon-image material-symbols-outlined">logout</span>
+                    <h4><strong>Logout</strong> </h4>
+                </a>
+                <!--<a href="">
+                    <span class="material-symbols-outlined">outpatient_med</span>
+                    <h4><strong>Clinics</strong></h4>
+                </a>
+                <a href="">
+                    <span class="material-symbols-outlined">groups_3</span>
+                    <h4> <strong>Meetings</strong></h4>
+                </a>
+                <a href="#">
+                    <span class="icon-image material-symbols-outlined">person</span>
+                    <h4> <strong>Departments</strong></h4>
+                </a>
+                <a href="#">
+                    <span class="icon-image material-symbols-outlined">person</span>
+                    <h4><strong>Settings</strong> </h4>
+                </a>
+            -->
+            </div>
+
+        </aside>
+
+        <!-- ======================= Cards ================== -->
+        <div class="main">
+            <div id="myModal_details2" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>
+                        <strong>{{elections}}</strong><br><br>
+                        <strong>Start at:</strong>{{elections_start}}<br>
+                        <strong>Ends at:</strong>{{elections_ends}}
+                    </p><br>
+
+                    <div class="add_candidate">
+
+                        <form method="POST" class="form-control" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{candidate_form.as_p}}
+                            <button  class="btn btn-primary">Add Candidate</button>
+                        </form>
+                    </div>
+                    <!--<form method="post">
+                        {% csrf_token %}
+                        {{ event_form.as_p }}
+                        <button type="submit">Add Event</button>
+                    </form>-->
+
+
+                </div>
+            </div>
+            <div id="myModal_details3" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div class="row_container">
+                        <div class="info_div">
+                            <p>
+                            <strong>{{elections}}</strong><br><br>
+                            <strong>Start at:</strong>{{elections_start}}<br>
+                            <strong>Ends at:</strong>{{elections_ends}}
+                        </p>
+                        </div>
+                        <div class="btn_div">
+                            {%for portfolio  in portfolios %}
+                            <a href="{% url 'portfolio' portfolio.id %}"><button class="btn btn-primary shadow">
+                                    {{portfolio.name_of_portfolio}}
+                                </button></a>
+                            {% endfor %}
+                        </div>
+
+
+                    </div>
+
+                    <!--<div class="add_candidate">
+                        <table class="style-table">
+                            <thead class="sticky-header">
+                                <tr>
+                                    <td>Portfolio</td>
+                                    <td>Name of Candidates</td>
+                                    <td>Actions</td>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+
+                                {% for candidate in candidate_data %}
+                                    <tr class="each-row">
+
+                                      <td>{{candidate.position}}</td>
+
+                                      <td>{{candidate.name}}</td>
+
+
+
+                                        <td>
+                                            <div class="action_btn">
+                                                <a href=""><span class="material-symbols-outlined edit">note_add</span></a>
+                                                <span class="material-symbols-outlined view_details_2">preview</span>
+                                                <span class="material-symbols-outlined del">delete</span>
+                                            </div>
+                                          </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>-->
+                    <!--<form method="post">
+                        {% csrf_token %}
+                        {{ event_form.as_p }}
+                        <button type="submit">Add Event</button>
+                    </form>-->
+
+
+                </div>
+            </div>
+
+            <div class="cardBox">
+                <div class="card" id="open_details">
+
+                    <div>
+                        <div class="numbers"><h4>{{elections}}</h4></div>
+                        <div class="cardName">Elections</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <span name="eye-outline" class="icon-image_top material-symbols-outlined">person</span>
+
+                    </div>
+                </div>
+
+                <div class="card" id="Candidate_No">
+                    <div>
+                        <div class="numbers">{{portfolios_number}}</div>
+                        <div class="cardName">Number of Portfolios</div>
+                    </div>
+
+                    <div class="iconBx">
+                        <span class="icon-image_top material-symbols-outlined">settings_accessibility</span>
+                    </div>
+                </div>
+
+                <div class="card open_calendar" id="open_event" >
+                    <div class="header">
+                        <div>
+                            <div class="numbers">{{submit_number}}</div>
+                            <div class="cardName">Add New Elections</div>
+                        </div>
+                        <div class="iconBx">
+                            <span class="icon-image_top2 material-symbols-outlined">health_and_safety</span>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="card" id="show_events">
+                    <div>
+                        <div class="numbers">{{ upcoming_events }}</div>
+                        <div class="cardName">Upcoming Elections</div>
+                    </div>
+                    <div class="iconBx">
+                        <span class="icon-image_top2 material-symbols-outlined calendar_month">calendar_month</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details2">
+                <div class="recentOrders">
+                    <div class="cardHeader">
+                        <h2>All Candidates</h2>
+                        <div class="search_container">
+                            <form method="GET" action="">
+                              <input type="text" name="search2" id="search2" class="input_cust" placeholder="Search Candidate">
+                                <button class="material-symbols-outlined search_icon">search</button>
+                            </form>
+
+                          </div>
+
+                    </div>
+
+                    <table>
+                        <thead class="sticky-header">
+                            <tr>
+                                <td>Candidate's Name</td>
+                                <td>Candidate Number</td>
+                                <td>Election Name</td>
+
+                                <td>Portfolio</td>
+                                <td>Actions</td>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+
+                            {% for candidate in candidate_data %}
+                                <tr class="each-row">
+                                    <td class="table_img">
+                                        <img src="{{candidate.image.url}}" alt="">{{ candidate.name }}
+                                    </td>
+
+                                  <td>{{candidate.Candidate_Number}}</td>
+
+                                  <td>{{candidate.election}}</td>
+
+                                  <td>{{candidate.position}}</td>
+
+
+
+                                    <td>
+                                        <div class="action_btn">
+                                          <a href=""><span class="material-symbols-outlined edit">edit</span></a>
+                                          <span class="material-symbols-outlined view_details_2">preview</span>
+                                          <span class="material-symbols-outlined del">delete</span>
+                                        </div>
+                                      </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <script>
+        // Get the modal elements
+        var modalDetails2 = document.getElementById("myModal_details2");
+        var modalDetails3 = document.getElementById("myModal_details3");
+
+        // Get the divs that open the modals
+        var detailsDiv = document.getElementById("open_details"); // Replace "open_details" with the actual ID of your div
+        var candidateDiv = document.getElementById("Candidate_No"); // Replace "Candidate_No" with the actual ID of your div
+
+        // Get the <span> elements that close the modals
+        var spanDetails2 = modalDetails2.getElementsByClassName("close")[0];
+        var spanDetails3 = modalDetails3.getElementsByClassName("close")[0];
+
+        // Function to open modalDetails2
+        function openModalDetails2() {
+            modalDetails2.style.display = "block";
+        }
+
+        // Function to open modalDetails3
+        function openModalDetails3() {
+            modalDetails3.style.display = "block";
+        }
+
+        // Function to close modalDetails2
+        function closeModalDetails2() {
+            modalDetails2.style.display = "none";
+        }
+
+        // Function to close modalDetails3
+        function closeModalDetails3() {
+            modalDetails3.style.display = "none";
+        }
+
+        // Open modalDetails2 when the detailsDiv is clicked
+        detailsDiv.addEventListener("click", openModalDetails2);
+
+        // Open modalDetails3 when the candidateDiv is clicked
+        candidateDiv.addEventListener("click", openModalDetails3);
+
+        // Close modalDetails2 when the spanDetails2 is clicked
+        spanDetails2.addEventListener("click", closeModalDetails2);
+
+        // Close modalDetails3 when the spanDetails3 is clicked
+        spanDetails3.addEventListener("click", closeModalDetails3);
+
+        // Close the modals when the user clicks outside of them
+        window.addEventListener("click", function(event) {
+            if (event.target == modalDetails2) {
+                closeModalDetails2();
+            }
+            if (event.target == modalDetails3) {
+                closeModalDetails3();
+            }
+        });
+    </script>
+
+
+
+
+
+
+{% endblock %}

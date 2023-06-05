@@ -1,0 +1,41 @@
+{% extends 'base.html'  %}
+
+{% block content %}
+    {% load static %}
+
+    <section class="login_form" id="login">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert fade_away_" role="alert" id="fade_away">
+                    <strong class="dark">Alert!:    </strong>
+                    <h5 class="dark">{{message}}</h5>
+                    <span class="material-symbols-outlined" id="close-btn">close</span>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="login_form_container">
+
+            <div class="_form_login">
+
+                <form action="" method="POST">
+
+                    {% csrf_token %}
+                    <div class="inst_logo">
+                        <img src="{%static 'img/logo.png'%}" alt="">
+                        <h3 class="login_label">Login</h3>
+                    </div>
+
+
+                    <input type="text" placeholder="Username" required name="username">
+
+                    <input type="password" placeholder="Password" required name="password">
+                    <button class="btn btn-primary" type="submit">Login</button>
+
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+

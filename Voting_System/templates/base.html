@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Atlanta Hall Elections | Login</title>
+    <link rel="icon" href="{%static 'img/logo.ico' %}">
+    <!-- paste online assets here -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release-pro/v4.0.0/css/solid.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> </link>
+    <link  rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+
+</head>
+<body>
+    <nav>
+        <div class="container nav_container">
+            <div class="logo_n_name">
+                <a href="" class="logo">
+                    <span class="img">
+                        <img class="nav_logo" src="{% static 'img/logo.ico' %}" alt="">
+                    </span>
+                    <h4>Atlanta Hall Elections</h4>
+                </a>
+            </div>
+
+            <ul class="nav_menu">
+                {% if user.is_authenticated %}
+                    <li class="logout"><a href="{% url 'logout' %}"><span class="icon-image material-symbols-outlined">logout</span></a></li>
+                     <li class="menu"><span class="material-symbols-outlined">menu</span></li>
+                {% else %}
+                    <li><a href=""></a></li>
+                    <li><a href="#login"></a></li>
+                    <li><a href="#login">Powered By BAS</a></li>
+                    <li><a href="{% url 'contactUs' %}">Contact BAS</a></li>
+
+
+                {% endif %}
+
+
+
+            </ul>
+            <button id="open-menu-icon"><i class="uil uil-bars"></i></button>
+            <button id="close-menu-icon"><i class="uil uil-bars"></i></button>
+        </div>
+    </nav>
+    <main>
+        {% block content %}
+
+        {% endblock %}
+    </main>
+
+
+    <script src="{% static 'js/script.js' %}"></script>
+
+</body>
+</html>
