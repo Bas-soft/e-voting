@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', views.login_ToVote, name='_loging_'),
     path('atl-eVoting/login', views.login_ToVote, name='_loging_'),
     path('dashboard/', views.dashboard, name='admin'),
     path('logout/', views.log_out_user, name='logout'),
@@ -18,3 +19,4 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
