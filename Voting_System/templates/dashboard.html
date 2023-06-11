@@ -212,31 +212,30 @@
                     <table>
                         <thead class="sticky-header">
                             <tr>
+                                <td>Image</td>
                                 <td>Candidate's Name</td>
                                 <td>Candidate Number</td>
                                 <td>Election Name</td>
 
                                 <td>Portfolio</td>
                                 <td>Actions</td>
+
                             </tr>
                         </thead>
 
                         <tbody>
-
-
                             {% for candidate in candidate_data %}
                                 <tr class="each-row">
-                                    <td class="table_img">
-                                        <img src="{{candidate.image.url}}" alt="">{{ candidate.name }}
+                                  <td class="table_img">
+                                        <img src="{{candidate.image.url}}" alt="">
                                     </td>
+                                  <td>{{candidate.name}}</td>
 
                                   <td>{{candidate.Candidate_Number}}</td>
 
                                   <td>{{candidate.election}}</td>
 
                                   <td>{{candidate.position}}</td>
-
-
 
                                     <td>
                                         <div class="action_btn">
@@ -312,23 +311,7 @@
         });
     </script>
 
-    <script>
-        // Wait for the document to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-          // Get the header row and body rows
-          var headerRow = document.querySelector('thead tr');
-          var bodyRows = document.querySelectorAll('tbody tr');
 
-          // Compare the heights of the header row and body rows
-          var headerHeight = headerRow.offsetHeight;
-          bodyRows.forEach(function(row) {
-            if (row.offsetHeight > headerHeight) {
-              row.style.display = 'none'; // Hide the row if its height exceeds the header height
-            }
-          });
-        });
-
-    </script>
 
 
 

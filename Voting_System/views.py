@@ -136,12 +136,14 @@ def dashboard(request):
             get_election = get_object_or_404(Elections, id=1)  # Retrieve the Elections instance
             element_id = get_election
 
+
             get_portfolios=Portfolios.objects.filter(election=element_id)
             portfolios_number=get_portfolios.count()
 
             get_candidates=Candidate.objects.filter(election=element_id)
             get_candidates_number =get_candidates.count()
             form = AddCandidateForm()
+
 
 
 
