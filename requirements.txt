@@ -45,8 +45,7 @@ pypng==0.20220715.0
 PyQRCode==1.2.1
 python-dateutil==2.8.2
 python-decouple==3.8
-pytz==2022.7.1
-pyzbar==0.1.9
+
 regex==2023.5.5
 requests==2.30.0
 six==1.16.0
@@ -62,6 +61,6 @@ virtualenv==20.0.31
 weasyprint==59.0
 webencodings==0.5.1
 whitenoise==6.4.0
-XlsxWriter==3.1.2
+
 zipp==3.15.0
 zopfli==0.2.2

@@ -27,9 +27,9 @@ SECRET_KEY = 'django-insecure-pjum7pqqaf7)-dl*j#=z!9x01t(d3m1uld&mvtjcb+usc9sg(8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['atl-evote.herokuapp.com']
 
-
+#ALLOWED_HOSTS=["bas-evote.com"]
 # Application definition
 
 INSTALLED_APPS = [
@@ -78,12 +78,25 @@ WSGI_APPLICATION = 'ATL.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
 
     }
+}'''
+
+DATABASE={
+        'default':{
+            'ENGINE':'django.db.backends.postgresql_psycopg2',
+            'NAME':'d20ov0vuhrrp7d',
+            'USER':'vwtldftzzpcalp',
+            'PASSWORD':'f395859887f1fea0b011926ad328d0923d0ce0130172d1278d459050c85149e2',
+            'HOST':'ec2-3-232-218-211.compute-1.amazonaws.com',
+            'PORT':'5432',
+
+        }
+
 }
 
 
