@@ -14,7 +14,7 @@ urlpatterns = [
     path('portfolio/<int:portfolio>', views.view_portfolio, name='portfolio'),
     path('atl-eVoting/vote', views.viewVotePage, name='Voting'),
     path('submit-votes/<int:candidate_id>', views.submitVotes, name='submit_votes'),
-    path('send-sms/', views.send_voter_credentials, name='send-sms'),
+    path('send-Vsms/', views.send_credentials, name='send-sms2'),
 ]
 
 
