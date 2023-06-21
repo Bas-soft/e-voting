@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-pjum7pqqaf7)-dl*j#=z!9x01t(d3m1uld&mvtjcb+usc9sg(8'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =False
+DEBUG =True
 
 ALLOWED_HOSTS = ['bas-evote.herokuapp.com']
 
@@ -140,6 +140,9 @@ STATIC_URL = '/static/'
 #STATIC_ROOT =os.path.join(BASE_DIR,'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATICFILES_DIR=[
+    os.path.join(BASE_DIR,'static'),
+]
 
 STATICFILES_STORAGE= 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
