@@ -51,6 +51,7 @@ class Votes(models.Model):
 class Voters(models.Model):
     election=models.ForeignKey(Elections,on_delete=models.CASCADE)
     name=models.CharField(max_length=100)
+    phone=models.CharField(max_length=50)
     index_number=models.CharField(max_length=12)
     secret_token=models.CharField(max_length=15)
 

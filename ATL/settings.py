@@ -85,10 +85,20 @@ WSGI_APPLICATION = 'ATL.wsgi.application'
 
     }
 }'''
-DATABASES = {
+'''DATABASES = {
     'default': dj_database_url.config(conn_max_age=600,ssl_require=True)
-}
+}'''
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd9rvgrplluqelk',
+        'USER': 'ouvgbijqrtndib',
+        'PASSWORD': 'ca3c82c03d4def68bcfdc8365f8284b8e18ae255f16d3ff7c41c0d11768f09fd',
+        'HOST': 'ec2-18-204-162-101.compute-1.amazonaws.com',
+        'PORT': '5432',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

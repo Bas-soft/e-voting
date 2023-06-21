@@ -21,4 +21,4 @@ class AddCandidateForm(forms.ModelForm):
 class AddVoters(forms.ModelForm):
     class Meta:
         model=Voters
-        fields=["name","index_number"]
+        fields=["name","index_number","phone"]

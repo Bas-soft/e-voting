@@ -319,3 +319,42 @@ def submitVotes(request,candidate_id):
 def log_out_user(request):
     logout(request)
     return redirect("_loging_")
+
+def send_messages(request,phone_number,message):
+    import requests
+
+    api_key = 'YOUR_API_KEY'  # Replace with your actual API key from mnotify
+
+    url = 'https://apps.mnotify.net/smsapi'
+    payload = {
+        'key': 'ZVUzBl7eAA1HnDC0KeBPvK9Rs',
+        'to': phone_number,
+        'msg': message,
+        'sender_id': 'ATL-EC'  # Replace with your desired sender ID
+    }
+
+    response = requests.get(url, params=payload)
+    print(response)
+    if response.status_code == 200:
+        print('SMS sent successfully')
+    else:
+        print('Failed to send SMS')
+
+
+
+def send_voter_credentials(request):
+
+    voters=Voters.objects.all()
+    for voter in voters:
+
+        phone_number = voter.phone  # Replace with the actual phone number field in your Voter model
+        message = f"Your credentials for the ATL 2023/2024 Elections: Username: {voter.index_number}, \n \
+        Password: {voter.secret_token} \n visit: https://bas-evote.herokuap.com/atl-eVoting/login to vote"
+
+        send_messages(request,int(phone_number), message)
+        print(message)
+
+    messages.success(request,"Credentials Sent Successfully!")
+
+    return redirect("voters")
+

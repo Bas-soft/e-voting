@@ -293,7 +293,9 @@ nav button {
   margin-left: 2rem;
 }
 
-
+.inst_logo img{
+    width:3rem;
+}
 
 /*---------------admin side bar-------------- */
 .aside_container{
@@ -745,6 +747,10 @@ thead.sticky-header {
 .card:hover{
     transform:scale(1.05);
 }
+/*============= vote results ========*/
+.space{
+    margin-bottom:2rem;
+}
 /* Tablet styles */
 @media (max-width: 768px) {
   /* Update container width */
@@ -950,4 +956,4 @@ thead.sticky-header {
 
 
   /* Additional mobile styles here */
-}
+
