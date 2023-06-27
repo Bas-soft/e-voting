@@ -22,10 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pjum7pqqaf7)-dl*j#=z!9x01t(d3m1uld&mvtjcb+usc9sg(8'
+
+SECRET_KEY=config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG =True
+DEBUG =False
 
 ALLOWED_HOSTS = ['bas-evote.herokuapp.com']
 
@@ -96,6 +97,7 @@ DATABASES = {
         'USER': 'ouvgbijqrtndib',
         'PASSWORD': 'ca3c82c03d4def68bcfdc8365f8284b8e18ae255f16d3ff7c41c0d11768f09fd',
         'HOST': 'ec2-18-204-162-101.compute-1.amazonaws.com',
+        'PORT': '5432',
         'PORT': '5432',
     }
 }'''
