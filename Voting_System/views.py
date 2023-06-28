@@ -343,13 +343,23 @@ def send_credentials(request):
 
     voters=Voters.objects.all()
     for voter in voters:
+        sent_value = voter.sent_sms
+        if not sent_value:
+            try:
+                phone_number = voter.phone  # Replace with the actual phone number field in your Voter model
+                message = f"Your cred. for the ATL 2023/2024 Elections: Username: {voter.index_number}, \n \
+                Password: {voter.secret_token} \n visit: https://bas-evote.herokuapp.com/atl-eVoting/login to vote"
+    
+                mNotify(int(phone_number), message)
+                print(message)
+                voter.sent_sms=True
+                voter.save()
 
-        phone_number = voter.phone  # Replace with the actual phone number field in your Voter model
-        message = f"Your cred. for the ATL 2023/2024 Elections: Username: {voter.index_number}, \n \
-        Password: {voter.secret_token} \n visit: https://bas-evote.herokuapp.com/atl-eVoting/login to vote"
+            except  Exception as e:
+                print(f"An error occurred: {str(e)}")
+        else:
+            pass
 
-        mNotify(request,int(phone_number), message)
-        print(message)
 
     messages.success(request,"Credentials Sent Successfully!")
 

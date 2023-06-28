@@ -54,6 +54,8 @@ class Voters(models.Model):
     phone=models.CharField(max_length=50)
     index_number=models.CharField(max_length=12)
     secret_token=models.CharField(max_length=15)
+    sent_sms = models.BooleanField(default=False, verbose_name="Credentials sent")
+
 
     objects = models.Manager()
 
