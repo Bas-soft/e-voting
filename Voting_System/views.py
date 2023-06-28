@@ -6,6 +6,8 @@ from . forms import AddCandidateForm,AddVoters
 from django.contrib import messages
 import uuid
 from django.utils import timezone
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from io import BytesIO
 from django.middleware import csrf
 
 from django.http import JsonResponse
@@ -101,19 +103,25 @@ def view_voters(request):
                 generated_Token = str(uuid.uuid4())[:8]
                 form = AddVoters(request.POST)
                 if form.is_valid():
-                    voter = form.save(commit=False)
-                    voter.election = element_id  # Assign the Elections instance
-                    voter.secret_token = f"ATL{generated_Token.upper()}"
-
-                    # Create a user for this voter
+                    # Check if the user with the same username already exists
                     username = form.cleaned_data['index_number']
-                    password = str(f"ATL{generated_Token.upper()}")
-                    user = User.objects.create_user(username=username, password=password,is_staff=True)
-                    print("User created:", user.username)
+                    if User.objects.filter(username=username).exists():
+                        messages.error(request, "Username already exists. Please choose a different username.")
+                        #return redirect('voters')
+                    else:
 
-                    voter.save()
-                    messages.success(request, "Voter registered successfully.")
-                    return redirect('voters')
+                        voter = form.save(commit=False)
+                        voter.election = element_id  # Assign the Elections instance
+                        voter.secret_token = f"ATL{generated_Token.upper()}"
+
+                        # Create a user for this voter
+                        password = str(f"ATL{generated_Token.upper()}")
+                        user = User.objects.create_user(username=username, password=password, is_staff=True)
+                        print("User created:", user.username)
+
+                        voter.save()
+                        messages.success(request, "Voter registered successfully.")
+                        return redirect('voters')
                 else:
                     messages.error(request, f"{form.errors}")
                     print(form.errors)
@@ -180,7 +188,7 @@ def dashboard(request):
 
 def viewVotePage(request):
     if request.user.is_authenticated:
-        pass
+        messages.success(request,"Please click the submit button to submit your votes for each portfolio")
         get_portfolios=Portfolios.objects.all()
         portfolio_condidates = Candidate.objects.all()
         get_portfolio_name = portfolio_condidates.first()
