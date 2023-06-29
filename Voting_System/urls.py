@@ -10,6 +10,7 @@ urlpatterns = [
     path('logout/', views.log_out_user, name='logout'),
     path('contact/', views.contactUS, name='contactUs'),
     path('voters/', views.view_voters, name='voters'),
+    path('add-bulk-voters/', views.process_excel_file, name='add_bulk_voters'),
     path('atl-eVoting/results', views.view_vote_Results, name='results'),
     path('portfolio/<int:portfolio>', views.view_portfolio, name='portfolio'),
     path('atl-eVoting/vote', views.viewVotePage, name='Voting'),

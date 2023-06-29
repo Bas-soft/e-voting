@@ -111,6 +111,33 @@
 
                 </div>
             </div>
+            <div id="myModal_details4" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div class="row_container">
+                        <div class="info_div">
+                            <p>
+                            <strong>{{elections}}</strong><br><br>
+                            <strong>Start at:</strong>{{elections_start}}<br>
+                            <strong>Ends at:</strong>{{elections_ends}}
+                        </p>
+                        </div>
+                        <div class="btn_div">
+                            <form method="POST" action="{% url 'add_bulk_voters' %}" enctype="multipart/form-data" class="form-control">
+                              {% csrf_token %}
+                              <input type="file" name="file" accept=".xlsx, .xls" class="input">
+                              <button type="submit" class="btn btn-primary">Upload</button>
+                            </form>
+                        </div>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
 
             <div class="cardBox">
                 <div class="card" id="open_details">
@@ -137,11 +164,11 @@
                     </div>
                 </div>
 
-                <div class="card open_calendar" id="open_event" >
+                <div class="card open_calendar" id="open_bulk" >
                     <div class="header">
                         <div>
                             <div class="numbers">{{submit_number}}</div>
-                            <div class="cardName">Add New Elections</div>
+                            <div class="cardName">Add Bulk Voters</div>
                         </div>
                         <div class="iconBx">
                             <span class="icon-image_top2 material-symbols-outlined">health_and_safety</span>
@@ -221,18 +248,22 @@
         </div>
 
     </div>
+
     <script>
         // Get the modal elements
         var modalDetails2 = document.getElementById("myModal_details2");
         var modalDetails3 = document.getElementById("myModal_details3");
+        var modalDetails4 = document.getElementById("myModal_details4");
 
         // Get the divs that open the modals
         var detailsDiv = document.getElementById("open_details"); // Replace "open_details" with the actual ID of your div
         var candidateDiv = document.getElementById("Candidate_No"); // Replace "Candidate_No" with the actual ID of your div
+        var bulkyVoters = document.getElementById("open_bulk"); // Replace "Candidate_No" with the actual ID of your div
 
         // Get the <span> elements that close the modals
         var spanDetails2 = modalDetails2.getElementsByClassName("close")[0];
         var spanDetails3 = modalDetails3.getElementsByClassName("close")[0];
+        var spanDetails4 = modalDetails4.getElementsByClassName("close")[0];
 
         // Function to open modalDetails2
         function openModalDetails2() {
@@ -242,6 +273,10 @@
         // Function to open modalDetails3
         function openModalDetails3() {
             modalDetails3.style.display = "block";
+        }
+        // Function to open modalDetails4
+        function openModalDetails4() {
+            modalDetails4.style.display = "block";
         }
 
         // Function to close modalDetails2
@@ -254,17 +289,29 @@
             modalDetails3.style.display = "none";
         }
 
+        // Function to close modalDetails4
+        function closeModalDetails4() {
+            modalDetails4.style.display = "none";
+        }
+
         // Open modalDetails2 when the detailsDiv is clicked
         detailsDiv.addEventListener("click", openModalDetails2);
 
         // Open modalDetails3 when the candidateDiv is clicked
         candidateDiv.addEventListener("click", openModalDetails3);
 
+        // Open modalDetails4 when the bulkyVoters is clicked
+        bulkyVoters.addEventListener("click", openModalDetails4);
+
         // Close modalDetails2 when the spanDetails2 is clicked
         spanDetails2.addEventListener("click", closeModalDetails2);
 
         // Close modalDetails3 when the spanDetails3 is clicked
         spanDetails3.addEventListener("click", closeModalDetails3);
+
+
+        // Close modalDetails4 when the spanDetails4 is clicked
+        spanDetails4.addEventListener("click", closeModalDetails4);
 
         // Close the modals when the user clicks outside of them
         window.addEventListener("click", function(event) {
@@ -273,6 +320,9 @@
             }
             if (event.target == modalDetails3) {
                 closeModalDetails3();
+            }
+            if (event.target == modalDetails4) {
+                closeModalDetails4();
             }
         });
     </script>

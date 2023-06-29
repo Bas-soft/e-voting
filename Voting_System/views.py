@@ -6,6 +6,9 @@ from . forms import AddCandidateForm,AddVoters
 from django.contrib import messages
 import uuid
 from django.utils import timezone
+import pandas as pd
+from django.conf import settings
+import os
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from io import BytesIO
 from django.middleware import csrf
@@ -78,6 +81,83 @@ def view_portfolio(request,portfolio):
     else:
         return redirect("_loging_")
 
+from django.contrib.auth.models import User
+
+def import_data_from_excel(file_path):
+    get_election = get_object_or_404(Elections, id=1)  # Retrieve the Elections instance
+    element_id = get_election
+    try:
+        # Read the Excel file into a pandas DataFrame
+        df = pd.read_excel(file_path)
+
+        # Check if the required columns exist in the DataFrame
+        required_columns = ['Name', 'Index number', 'personal contact']
+        missing_columns = [col for col in required_columns if col not in df.columns]
+
+        if missing_columns:
+            raise ValueError(f"Missing columns in the Excel file: {', '.join(missing_columns)}")
+
+        # Iterate over the rows of the DataFrame
+        for index, row in df.iterrows():
+            generated_Token = str(uuid.uuid4())[:8]
+            # Extract the necessary data from each row
+            field1 = row['Name']  # Replace 'Name' with the column name from your Excel sheet
+            field3 = row['personal contact']  # Replace 'personal contact' with the column name from your Excel sheet
+            field2 = row['Index number']  # Replace 'Index number' with the column name from your Excel sheet
+
+            if User.objects.filter(username=field2).exists():
+                print("error,user alrady exists")
+                # return redirect('voters')
+            else:
+
+                password = str(f"ATL{generated_Token.upper()}")
+
+                # Create a new instance of your Django model and populate the fields
+                obj = Voters(name=field1, index_number=field2.upper(), phone=field3, secret_token=password,election=element_id)
+
+                # Save the object to the database
+                obj.save()
+
+                # Create a corresponding User object and set them as staff members
+                user = User.objects.create_user(username=field2.upper(), password=password, is_staff=True)
+                print("User created:", user.username)
+
+        return True
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return False
+
+def process_excel_file(request):
+    if request.method == 'POST':
+        file = request.FILES.get('file')  # Get the uploaded file from the request
+
+
+        # Specify the path to save the file temporarily
+        file_path = os.path.join(settings.MEDIA_ROOT, file.name)
+
+        # Save the uploaded file temporarily
+        with open(file_path, 'wb') as destination:
+            for chunk in file.chunks():
+                destination.write(chunk)
+
+        # Import data from the Excel file
+        success = import_data_from_excel(file_path)
+
+        if success:
+            # Display a success message
+            messages.success(request, "Data imported successfully.")
+        else:
+            # Display an error message
+            messages.error(request, "Failed to import data.")
+
+        # Delete the temporary file
+        os.remove(file_path)
+
+        return redirect('voters')
+
+    return render(request, 'voters.html')
+
+
 def view_voters(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
@@ -98,7 +178,7 @@ def view_voters(request):
                 "voters_form": form,
                 "voters": voters,
             }
-
+            voters=[[]]
             if request.method == "POST":
                 generated_Token = str(uuid.uuid4())[:8]
                 form = AddVoters(request.POST)
@@ -186,83 +266,67 @@ def dashboard(request):
     else:
         return redirect("_loging_")
 
+from django.shortcuts import get_object_or_404
+
 def viewVotePage(request):
     if request.user.is_authenticated:
-        messages.success(request,"Please click the submit button to submit your votes for each portfolio")
-        get_portfolios=Portfolios.objects.all()
-        portfolio_condidates = Candidate.objects.all()
-        get_portfolio_name = portfolio_condidates.first()
+        get_portfolios = Portfolios.objects.exclude(votes__user=request.user)
+        portfolio_candidates = Candidate.objects.all()
+        get_portfolio_name = portfolio_candidates.first()
         portfolio_name = get_portfolio_name.position if get_portfolio_name else None
-        count_candidtes = portfolio_condidates.count()
+        count_candidates = portfolio_candidates.count()
 
         context = {
             "portfolios": get_portfolios,
-            "portfolio_candidates": portfolio_condidates,
-            "numb_candidates": count_candidtes,
+            "portfolio_candidates": portfolio_candidates,
+            "numb_candidates": count_candidates,
         }
 
         current_datetime = timezone.now()
-        election = Elections.objects.filter(start_date__lte=current_datetime,
-                                            end_date__gt=current_datetime).first()
-        if election:
+
+        try:
+            election = Elections.objects.get(start_date__lte=current_datetime, end_date__gt=current_datetime)
+
             if request.method == 'POST':
-                candidate_ids = request.POST.getlist('candidate_ids[]')
                 selected_candidates = request.POST.getlist('votes')
-                print(selected_candidates)
+
                 current_user = request.user
-
-
                 for selected_candidate in selected_candidates:
-                    # Process the candidate IDs and submit the votes to the model
-
+                    # Process the selected candidates' information
                     candidate_info = selected_candidate.split('|')
                     candidate_id = int(candidate_info[0])
                     candidate_number = candidate_info[1]
                     portfolio = candidate_info[2]
-                    election = candidate_info[3]
 
+                    try:
+                        candidate = Candidate.objects.get(id=candidate_id)
+                        portfolio_instance = get_object_or_404(Portfolios, name_of_portfolio=portfolio)
 
-                #print(f'{candidate_id},{candidate_number},{portfolio},{election}')  # Process the selected candidates' numbers
+                        if Votes.objects.filter(election=election, portfolio=portfolio_instance, user=current_user).exists():
+                            messages.success(request, "You have already voted for this portfolio.")
+                        else:
+                            vote = Votes(election=election, portfolio=portfolio_instance, user=current_user, candidate=candidate)
+                            vote.save()
+                            candidate.vote += 1
+                            candidate.save()
+                            messages.success(request, f"You have successfully voted for {candidate.name} as {portfolio_instance}.")
 
-                #use the candidate number too look for candidate's name
-                try:
-                    candidate_name=Candidate.objects.filter(id=int(candidate_id))
-                    candidate=get_object_or_404(Candidate,id=candidate_id)
-                    get_candidate_name = candidate_name.first()
-                    #candidate_name = get_candidate_name.name if get_candidate_name else None
-                    election_name = get_candidate_name.election if get_candidate_name else None
+                    except Candidate.DoesNotExist:
+                        messages.success(request, "Please select a candidate to vote for.")
+                        pass
 
+            if not get_portfolios:
+                messages.success(request, "You have voted for all portfolios.")
 
-                    # Retrieve the portfolio instance
-                    portfolio_instance = get_object_or_404(Portfolios, name_of_portfolio=portfolio)
-
-
-                    if Votes.objects.filter(election=election_name,portfolio=portfolio_instance,user=current_user,).exists():
-                        messages.success(request,"you have already voted for this portfolio")
-                        print("you have already voted for this portfolio")
-                    else:
-                        print('vote')
-                        vote=Votes(election=election_name,portfolio=portfolio_instance,user=current_user,candidate=get_candidate_name)
-                        vote.save()
-                        candidate.vote+=1
-                        candidate.save()
-                        messages.success(request, f"You've Successfully voted for {get_candidate_name} as {portfolio_instance}")
-
-                except UnboundLocalError as e:
-                    messages.success(request, "Please Select A Candidate To Vote For")
-                    pass
-
-
-            return render(request, "voting_page.html", context)
-        else:
-            # Voting is closed
-            messages.success(request, "Please Contact the EC for info On Voting Time")
+        except Elections.DoesNotExist:
+            # No active election found
+            messages.success(request, "Please contact the EC for information on voting time.")
             return redirect("_loging_")
 
+        return render(request, "voting_page.html", context)
     else:
-        messages.success(request,"You Must Be A Valid Voter To Vote, Please Contact The EC")
+        messages.success(request, "You must be a valid voter to vote. Please contact the EC.")
         return redirect("_loging_")
-
 
 def view_vote_Results(request):
     if request.user.is_authenticated:

@@ -69,59 +69,54 @@
                 </div>
             {% endfor %}
         {% endif %}
-        {% for portfolio in portfolios %}
 
-        <div class="recentOrders">
-          <div class="cardHeader">
-            <h2 class="station">{{ portfolio.name_of_portfolio }}</h2>
-            <div class="search_container station">
-              <form method="GET" action="">
-                <input type="text" name="search2" id="search2" class="input_cust" placeholder="Search Candidate">
-                <button class="material-symbols-outlined search_icon">search</button>
-              </form>
+        <form method="POST" action="{% url 'Voting' %}">
+          {% csrf_token %}
+          {% for portfolio in portfolios %}
+            <div class="recentOrders">
+              <div class="cardHeader">
+                <h2 class="station">{{ portfolio.name_of_portfolio }}</h2>
+                <div class="search_container station">
+                  <input type="text" name="search2" id="search2" class="input_cust" placeholder="Search Candidate">
+                  <button class="material-symbols-outlined search_icon">search</button>
+                </div>
+              </div>
+              <table>
+                <thead class="sticky-header">
+                  <tr>
+                    <td>Candidate's Name/Number</td>
+                    <td>Actions</td>
+                    <td>Election Name</td>
+                    <td>Portfolio</td>
+                  </tr>
+                </thead>
+                <tbody class="portfolio-table-body">
+                  {% for candidate in portfolio.candidate_set.all %}
+                    <tr class="each-row">
+                      <td>
+                        {{ candidate.Candidate_Number }}
+                        <img src="{{candidate.image.url}}" class="table_img" alt="">{{ candidate.name }}
+                      </td>
+                      <td>
+                        <div class="action_btn">
+                          <label>
+                            <input type="checkbox" class="vote-checkbox" name="votes" value="{{ candidate.id }}|{{ candidate.Candidate_Number }}|{{ candidate.position }}|{{ candidate.election }}|{{ portfolio.id }}" onclick="handleCheckboxClick(this)">
+                            Vote
+                          </label>
+                        </div>
+                      </td>
+                      <td>{{ candidate.election }}</td>
+                      <td>{{ candidate.position.name_of_portfolio }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
             </div>
-          </div>
-            <form method="POST" action="{% url 'Voting' %}">
-                {% csrf_token %}
-                <table>
-                    <thead class="sticky-header">
-                        <tr>
-                            <td>Candidate's Name/Number</td>
-                            <td>Actions</td>
-                            <td>Election Name</td>
-                            <td>Portfolio</td>
-
-                        </tr>
-                    </thead>
-                    <tbody class="portfolio-table-body">
-                        {% for candidate in portfolio.candidate_set.all %}
-                            <tr class="each-row">
-                                <td >
-                                    {{ candidate.Candidate_Number }}
-                                    <img src="{{candidate.image.url}}" class="table_img" alt="">{{ candidate.name }}
-                                </td>
-                                <td>
-                                    <div class="action_btn">
-                                        <label>
-                                            <input type="checkbox" class="vote-checkbox" name="votes" value="{{ candidate.id }}|{{ candidate.Candidate_Number }}|{{ candidate.position }}|{{ candidate.election }}" onclick="handleCheckboxClick(this)">
-                                            Vote
-                                        </label>
-                                    </div>
-                                </td>
-
-                                <td>{{ candidate.election }}</td>
-                                <td>{{ candidate.position.name_of_portfolio }}</td>
-
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <button class="btn btn-primary station" type="submit">Submit Votes</button>
-            </form>
+          {% endfor %}
+          <button class="btn btn-primary station" type="submit">Submit Votes</button>
+        </form>
 
 
-        </div>
-      {% endfor %}
 
     </div>
     <script>
@@ -136,6 +131,42 @@
         }
     </script>
 
+    <script>
+        // Get the modal elements
+        var prompt_model = document.getElementById("fade_away");
+
+        // Get the close btn for  modal elements
+        var spanDetails2 = modalDetails2.getElementById("close-btn")[0];
+
+
+        // Function to close prompt_model
+        function closeModalPrompt() {
+            prompt_model.style.display = "none";
+        }
+
+        // Close prompt_model when the spanDetails2 is clicked
+        spanDetails2.addEventListener("click", closeModalPrompt);
+    </script>
+
+
+    <script>
+        // Get the close button element
+        var closeBtn = document.getElementById("close-btn");
+
+        // Add a click event listener to the close button
+        closeBtn.addEventListener("click", function() {
+            // Find the closest parent element with the class "alert"
+            var alert = this.closest(".alert");
+
+            // Fade out the alert element
+            alert.style.opacity = "0";
+
+            // Remove the alert element from the DOM after the fade out animation
+            setTimeout(function() {
+                alert.remove();
+            }, 500);
+        });
+    </script>
 
 
 
