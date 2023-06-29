@@ -83,6 +83,10 @@ def view_portfolio(request,portfolio):
 
 from django.contrib.auth.models import User
 
+from django.db import IntegrityError
+
+# ...
+
 def import_data_from_excel(file_path):
     get_election = get_object_or_404(Elections, id=1)  # Retrieve the Elections instance
     element_id = get_election
@@ -105,15 +109,11 @@ def import_data_from_excel(file_path):
             field3 = row['personal contact']  # Replace 'personal contact' with the column name from your Excel sheet
             field2 = row['Index number']  # Replace 'Index number' with the column name from your Excel sheet
 
-            if User.objects.filter(username=field2).exists():
-                print("error,user alrady exists")
-                # return redirect('voters')
-            else:
-
+            try:
                 password = str(f"ATL{generated_Token.upper()}")
 
                 # Create a new instance of your Django model and populate the fields
-                obj = Voters(name=field1, index_number=field2.upper(), phone=field3, secret_token=password,election=element_id)
+                obj = Voters(name=field1, index_number=field2.upper(), phone=field3, secret_token=password, election=element_id)
 
                 # Save the object to the database
                 obj.save()
@@ -121,11 +121,14 @@ def import_data_from_excel(file_path):
                 # Create a corresponding User object and set them as staff members
                 user = User.objects.create_user(username=field2.upper(), password=password, is_staff=True)
                 print("User created:", user.username)
+            except IntegrityError:
+                print(f"Username '{field2.upper()}' already exists. Skipping this entry.")
 
         return True
     except Exception as e:
         print(f"An error occurred: {str(e)}")
         return False
+
 
 def process_excel_file(request):
     if request.method == 'POST':
