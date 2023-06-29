@@ -171,6 +171,9 @@ def view_voters(request):
             voters = Voters.objects.filter(election=element_id)
             valid_voters = voters.count()
 
+            candidates = Candidate.objects.filter(election=element_id).order_by(
+                'Candidate_Number')  # Order candidates by Candidate_Number
+
             form = AddVoters()
 
             context = {
@@ -180,40 +183,17 @@ def view_voters(request):
                 "election_ends": end_election,
                 "voters_form": form,
                 "voters": voters,
+                "candidates": candidates,  # Add the ordered candidates to the context
             }
-            voters=[[]]
-            if request.method == "POST":
-                generated_Token = str(uuid.uuid4())[:8]
-                form = AddVoters(request.POST)
-                if form.is_valid():
-                    # Check if the user with the same username already exists
-                    username = form.cleaned_data['index_number']
-                    if User.objects.filter(username=username).exists():
-                        messages.error(request, "Username already exists. Please choose a different username.")
-                        #return redirect('voters')
-                    else:
 
-                        voter = form.save(commit=False)
-                        voter.election = element_id  # Assign the Elections instance
-                        voter.secret_token = f"ATL{generated_Token.upper()}"
-
-                        # Create a user for this voter
-                        password = str(f"ATL{generated_Token.upper()}")
-                        user = User.objects.create_user(username=username, password=password, is_staff=True)
-                        print("User created:", user.username)
-
-                        voter.save()
-                        messages.success(request, "Voter registered successfully.")
-                        return redirect('voters')
-                else:
-                    messages.error(request, f"{form.errors}")
-                    print(form.errors)
+            # Rest of the code...
 
             return render(request, "voters.html", context)
         else:
             return redirect("_loging_")
     else:
         return redirect("_loging_")
+
 
 def dashboard(request):
     if request.user.is_authenticated:

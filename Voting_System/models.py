@@ -62,7 +62,6 @@ class Voters(models.Model):
     def __str__(self):
         return self.index_number
 
-
 class Expired_Tokens(models.Model):
     election = models.ForeignKey(Elections, on_delete=models.CASCADE)
     index_number = models.CharField(max_length=12)
